@@ -19,5 +19,5 @@ module.exports = {
     ecmaVersion: "latest",
     sourceType: "module",
   },
-  rules: ["error", { allow: ["_id"] }],
+  rules: {["error",{"allow":["_id"]}]},
 };
