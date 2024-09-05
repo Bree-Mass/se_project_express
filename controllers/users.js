@@ -3,15 +3,11 @@ const ERROR_CODES = require("../utils/errors");
 
 module.exports.getUsers = (req, res) => {
   User.find({})
-    .orFail()
+
     .then((users) => res.send({ data: users }))
     .catch((err) => {
       console.error("Error fetching users:", err.name);
-      if (err.name === "DocumentNotFoundError") {
-        ERROR_CODES.NOT_FOUND(res, err);
-      } else {
-        ERROR_CODES.INTERNAL_SERVER_ERROR(res);
-      }
+      ERROR_CODES.INTERNAL_SERVER_ERROR(res);
     });
 };
 
@@ -22,9 +18,9 @@ module.exports.getUser = (req, res) => {
     .catch((err) => {
       console.error("Error fetching user:", err.name);
       if (err.name === "CastError") {
-        ERROR_CODES.BAD_REQUEST(res, err);
+        ERROR_CODES.VALIDATION_ERROR(res);
       } else if (err.name === "DocumentNotFoundError") {
-        ERROR_CODES.NOT_FOUND(res, err);
+        ERROR_CODES.NOT_FOUND(res);
       } else {
         ERROR_CODES.INTERNAL_SERVER_ERROR(res);
       }
@@ -38,9 +34,9 @@ module.exports.createUser = (req, res) => {
     .catch((err) => {
       console.error("Error creating user:", err.name);
       if (err.name === "ValidationError") {
-        ERROR_CODES.VALIDATION_ERROR(res, err);
+        ERROR_CODES.VALIDATION_ERROR(res);
       } else {
-        ERROR_CODES.INTERNAL_SERVER_ERROR(res, err);
+        ERROR_CODES.INTERNAL_SERVER_ERROR(res);
       }
     });
 };

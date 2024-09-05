@@ -3,15 +3,10 @@ const ERROR_CODES = require("../utils/errors");
 
 module.exports.getClothingItems = (req, res) => {
   ClothingItem.find({})
-    .orFail()
     .then((item) => res.send({ data: item }))
     .catch((err) => {
       console.error("Error fetching clothing items:", err.name);
-      if (err.name === "DocumentNotFoundError") {
-        ERROR_CODES.NOT_FOUND(res, err);
-      } else {
-        ERROR_CODES.INTERNAL_SERVER_ERROR(res, err);
-      }
+      ERROR_CODES.INTERNAL_SERVER_ERROR(res);
     });
 };
 
@@ -22,9 +17,9 @@ module.exports.createClothingItem = (req, res) => {
     .catch((err) => {
       console.error("Error creating clothing item:", err.name);
       if (err.name === "ValidationError") {
-        ERROR_CODES.VALIDATION_ERROR(res, err);
+        ERROR_CODES.VALIDATION_ERROR(res);
       } else {
-        ERROR_CODES.INTERNAL_SERVER_ERROR(res, err);
+        ERROR_CODES.INTERNAL_SERVER_ERROR(res);
       }
     });
 };
@@ -36,11 +31,11 @@ module.exports.deleteClothingItem = (req, res) => {
     .catch((err) => {
       console.error("Error deleting clothing item:", err.name);
       if (err.name === "CastError") {
-        ERROR_CODES.BAD_REQUEST(res, err);
+        ERROR_CODES.VALIDATION_ERROR(res);
       } else if (err.name === "DocumentNotFoundError") {
-        ERROR_CODES.NOT_FOUND(res, err);
+        ERROR_CODES.NOT_FOUND(res);
       } else {
-        ERROR_CODES.INTERNAL_SERVER_ERROR(res, err);
+        ERROR_CODES.INTERNAL_SERVER_ERROR(res);
       }
     });
 };
@@ -56,11 +51,11 @@ module.exports.likeItem = (req, res) => {
     .catch((err) => {
       console.error("Error liking clothing item:", err.name);
       if (err.name === "CastError") {
-        ERROR_CODES.BAD_REQUEST(res, err);
+        ERROR_CODES.VALIDATION_ERROR(res);
       } else if (err.name === "DocumentNotFoundError") {
-        ERROR_CODES.NOT_FOUND(res, err);
+        ERROR_CODES.NOT_FOUND(res);
       } else {
-        ERROR_CODES.INTERNAL_SERVER_ERROR(res, err);
+        ERROR_CODES.INTERNAL_SERVER_ERROR(res);
       }
     });
 };
@@ -76,11 +71,11 @@ module.exports.dislikeItem = (req, res) => {
     .catch((err) => {
       console.error("Error liking clothing item:", err.name);
       if (err.name === "CastError") {
-        ERROR_CODES.BAD_REQUEST(res, err);
+        ERROR_CODES.VALIDATION_ERROR(res);
       } else if (err.name === "DocumentNotFoundError") {
-        ERROR_CODES.NOT_FOUND(res, err);
+        ERROR_CODES.NOT_FOUND(res);
       } else {
-        ERROR_CODES.INTERNAL_SERVER_ERROR(res, err);
+        ERROR_CODES.INTERNAL_SERVER_ERROR(res);
       }
     });
 };

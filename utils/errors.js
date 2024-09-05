@@ -1,25 +1,19 @@
 const ERROR_CODES = {
-  BAD_REQUEST: (res, err) => {
+  VALIDATION_ERROR: (res) => {
     res.status(400).send({
-      message: `${err.message}`,
+      message: `Invalid data`,
     });
   },
 
-  VALIDATION_ERROR: (res, err) => {
-    res.status(400).send({
-      message: `${err.message}`,
-    });
-  },
-
-  NOT_FOUND: (res, err) => {
+  NOT_FOUND: (res) => {
     res.status(404).send({
-      message: `${err.message}`,
+      message: `Request resource not found`,
     });
   },
 
-  INTERNAL_SERVER_ERROR: (res, err) => {
+  INTERNAL_SERVER_ERROR: (res) => {
     res.status(500).send({
-      message: `${err.message}`,
+      message: `An error has accurred on the server`,
     });
   },
 };
