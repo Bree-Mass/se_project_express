@@ -1,9 +1,34 @@
-# WTWR (What to Wear?): Back End
-The back-end project is focused on creating a server for the WTWR application. You’ll gain a deeper understanding of how to work with databases, set up security and testing, and deploy web applications on a remote machine. The eventual goal is to create a server with an API and user authorization.
-## Running the Project
-`npm run start` — to launch the server 
+# Node Express Server API
 
-`npm run dev` — to launch the server with the hot reload feature
+## Description
 
-### Testing
-Before committing your code, make sure you edit the file `sprint.txt` in the root folder. The file `sprint.txt` should contain the number of the sprint you're currently working on. For ex. 12
+This project is a back-end API built using Node.js, Express, and MongoDB. The API is designed to handle various operations through RESTful endpoints, enabling secure and efficient data management. It interacts with a MongoDB database for data persistence and includes centralized error handling for consistent and reliable responses.
+
+## Functionality
+
+- RESTful API built with Express.js for managing requests and responses.
+- MongoDB integration for storing and retrieving application data.
+- Middleware for secure and efficient request processing.
+- Centralized error handling to ensure proper error messaging.
+
+## Technologies Used
+
+### Back End
+
+- **Node.js**: A JavaScript runtime for server-side programming.
+- **Express.js**: A fast web framework for building APIs with Node.js.
+- **MongoDB**: A NoSQL database for flexible and scalable data storage.
+
+### Other Tools & Techniques
+
+- **Mongoose**: An ODM (Object Data Modeling) library for MongoDB, simplifying database interactions.
+- **ESLint**: A tool for maintaining code quality and enforcing coding standards.
+- **Prettier**: For consistent code formatting across the project.
+- **Nodemon**: A development tool for automatically restarting the server when changes are detected.
+
+## How to Run the Project
+
+1. Clone the repository.
+2. Install dependencies using `npm install`.
+3. Configure environment variables (e.g., MongoDB connection string).
+4. Start the server using `npm run start` for production or `npm run dev` for development with hot reloading.
