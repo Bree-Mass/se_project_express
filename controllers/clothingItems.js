@@ -22,9 +22,9 @@ module.exports.createClothingItem = (req, res) => {
     .catch((err) => {
       console.error("Error creating clothing item:", err.name);
       if (err.name === "ValidationError") {
-        return ERROR_CODES.VALIDATION_ERROR(res, err);
+        ERROR_CODES.VALIDATION_ERROR(res, err);
       } else {
-        return ERROR_CODES.INTERNAL_SERVER_ERROR(res, err);
+        ERROR_CODES.INTERNAL_SERVER_ERROR(res, err);
       }
     });
 };
@@ -36,11 +36,11 @@ module.exports.deleteClothingItem = (req, res) => {
     .catch((err) => {
       console.error("Error deleting clothing item:", err.name);
       if (err.name === "CastError") {
-        return ERROR_CODES.BAD_REQUEST(res, err);
+        ERROR_CODES.BAD_REQUEST(res, err);
       } else if (err.name === "DocumentNotFoundError") {
-        return ERROR_CODES.NOT_FOUND(res, err);
+        ERROR_CODES.NOT_FOUND(res, err);
       } else {
-        return ERROR_CODES.INTERNAL_SERVER_ERROR(res, err);
+        ERROR_CODES.INTERNAL_SERVER_ERROR(res, err);
       }
     });
 };
@@ -56,11 +56,11 @@ module.exports.likeItem = (req, res) => {
     .catch((err) => {
       console.error("Error liking clothing item:", err.name);
       if (err.name === "CastError") {
-        return ERROR_CODES.BAD_REQUEST(res, err);
+        ERROR_CODES.BAD_REQUEST(res, err);
       } else if (err.name === "DocumentNotFoundError") {
-        return ERROR_CODES.NOT_FOUND(res, err);
+        ERROR_CODES.NOT_FOUND(res, err);
       } else {
-        return ERROR_CODES.INTERNAL_SERVER_ERROR(res, err);
+        ERROR_CODES.INTERNAL_SERVER_ERROR(res, err);
       }
     });
 };

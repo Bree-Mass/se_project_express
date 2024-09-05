@@ -8,9 +8,9 @@ module.exports.getUsers = (req, res) => {
     .catch((err) => {
       console.error("Error fetching users:", err.name);
       if (err.name === "DocumentNotFoundError") {
-        return ERROR_CODES.NOT_FOUND(res, err);
+        ERROR_CODES.NOT_FOUND(res, err);
       } else {
-        return ERROR_CODES.INTERNAL_SERVER_ERROR(res);
+        ERROR_CODES.INTERNAL_SERVER_ERROR(res);
       }
     });
 };
@@ -22,11 +22,11 @@ module.exports.getUser = (req, res) => {
     .catch((err) => {
       console.error("Error fetching user:", err.name);
       if (err.name === "CastError") {
-        return ERROR_CODES.BAD_REQUEST(res, err);
+        ERROR_CODES.BAD_REQUEST(res, err);
       } else if (err.name === "DocumentNotFoundError") {
-        return ERROR_CODES.NOT_FOUND(res, err);
+        ERROR_CODES.NOT_FOUND(res, err);
       } else {
-        return ERROR_CODES.INTERNAL_SERVER_ERROR(res);
+        ERROR_CODES.INTERNAL_SERVER_ERROR(res);
       }
     });
 };
@@ -38,9 +38,9 @@ module.exports.createUser = (req, res) => {
     .catch((err) => {
       console.error("Error creating user:", err.name);
       if (err.name === "ValidationError") {
-        return ERROR_CODES.VALIDATION_ERROR(res, err);
+        ERROR_CODES.VALIDATION_ERROR(res, err);
       } else {
-        return ERROR_CODES.INTERNAL_SERVER_ERROR(res, err);
+        ERROR_CODES.INTERNAL_SERVER_ERROR(res, err);
       }
     });
 };
