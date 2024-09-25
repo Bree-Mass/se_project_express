@@ -25,9 +25,15 @@ module.exports.createClothingItem = (req, res) => {
 };
 
 module.exports.deleteClothingItem = (req, res) => {
-  ClothingItem.findByIdAndRemove(req.params.itemId)
+  ClothingItem.findById(req.params.itemId)
     .orFail()
-    .then((item) => res.send({ data: item }))
+    .then((item) => {
+      if (item.owner.toString() !== req.user._id) {
+        return ERROR_CODES.PERMISSION_ERROR(res);
+      }
+      return ClothingItem.findByIdAndRemove(req.params.itemId);
+    })
+    .then(() => res.send({ message: "Item successfully deleted" }))
     .catch((err) => {
       console.error("Error deleting clothing item:", err.name);
       if (err.name === "CastError") {

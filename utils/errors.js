@@ -5,9 +5,27 @@ const ERROR_CODES = {
     });
   },
 
+  AUTHORIZATION_ERROR: (res) => {
+    res.status(401).send({
+      message: `Authorization required`,
+    });
+  },
+
+  PERMISSION_ERROR: (res) => {
+    res.status(403).send({
+      message: `You do not have permission to access this resource`,
+    });
+  },
+
   NOT_FOUND: (res) => {
     res.status(404).send({
       message: `Request resource not found`,
+    });
+  },
+
+  CONFLICT_ERROR: (res) => {
+    res.status(409).send({
+      message: `User already exists`,
     });
   },
 
