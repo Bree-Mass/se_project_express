@@ -31,9 +31,10 @@ module.exports.deleteClothingItem = (req, res) => {
       if (item.owner.toString() !== req.user._id) {
         return ERROR_CODES.PERMISSION_ERROR(res);
       }
-      return ClothingItem.findByIdAndRemove(req.params.itemId);
+      return ClothingItem.findByIdAndRemove(req.params.itemId).then(() =>
+        res.send({ message: "Item successfully deleted" })
+      );
     })
-    .then(() => res.send({ message: "Item successfully deleted" }))
     .catch((err) => {
       console.error("Error deleting clothing item:", err.name);
       if (err.name === "CastError") {
