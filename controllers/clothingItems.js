@@ -1,53 +1,61 @@
 const ClothingItem = require("../models/clothingItem");
-const ERROR_CODES = require("../utils/errors");
+const {
+  BadRequestError,
+  ForbiddenError,
+  NotFoundError,
+} = require("../utils/errors");
 
 module.exports.getClothingItems = (req, res) => {
   ClothingItem.find({})
     .then((item) => res.send({ data: item }))
     .catch((err) => {
-      console.error("Error fetching clothing items:", err.name);
-      ERROR_CODES.INTERNAL_SERVER_ERROR(res);
-    });
-};
-
-module.exports.createClothingItem = (req, res) => {
-  const { name, weather, imageUrl } = req.body;
-  ClothingItem.create({ name, weather, imageUrl, owner: req.user._id })
-    .then((item) => res.send({ data: item }))
-    .catch((err) => {
-      console.error("Error creating clothing item:", err.name);
-      if (err.name === "ValidationError") {
-        ERROR_CODES.VALIDATION_ERROR(res);
+      if (err.name === "CastError") {
+        next(err);
       } else {
-        ERROR_CODES.INTERNAL_SERVER_ERROR(res);
+        next(err);
       }
     });
 };
 
-module.exports.deleteClothingItem = (req, res) => {
+module.exports.createClothingItem = (req, res, next) => {
+  const { name, weather, imageUrl } = req.body;
+  ClothingItem.create({ name, weather, imageUrl, owner: req.user._id })
+    .then((item) => res.send({ data: item }))
+    .catch((err) => {
+      console.log(err.name, err.message);
+      if (err.name === "ValidationError") {
+        next(new BadRequestError("Invalid input data"));
+      } else {
+        next(err);
+      }
+    });
+};
+
+module.exports.deleteClothingItem = (req, res, next) => {
   ClothingItem.findById(req.params.itemId)
     .orFail()
     .then((item) => {
       if (item.owner.toString() !== req.user._id) {
-        return ERROR_CODES.PERMISSION_ERROR(res);
+        return next(
+          new ForbiddenError("You do not have permission for this action")
+        );
       }
       return ClothingItem.findByIdAndRemove(req.params.itemId).then(() =>
         res.send({ message: "Item successfully deleted" })
       );
     })
     .catch((err) => {
-      console.error("Error deleting clothing item:", err.name);
       if (err.name === "CastError") {
-        ERROR_CODES.VALIDATION_ERROR(res);
+        next(new BadRequestError("The id string is in an invalid format"));
       } else if (err.name === "DocumentNotFoundError") {
-        ERROR_CODES.NOT_FOUND(res);
+        next(new NotFoundError("Document not found"));
       } else {
-        ERROR_CODES.INTERNAL_SERVER_ERROR(res);
+        next(err);
       }
     });
 };
 
-module.exports.likeItem = (req, res) => {
+module.exports.likeItem = (req, res, next) => {
   ClothingItem.findByIdAndUpdate(
     req.params.itemId,
     { $addToSet: { likes: req.user._id } },
@@ -56,18 +64,17 @@ module.exports.likeItem = (req, res) => {
     .orFail()
     .then((item) => res.send({ data: item }))
     .catch((err) => {
-      console.error("Error liking clothing item:", err.name);
       if (err.name === "CastError") {
-        ERROR_CODES.VALIDATION_ERROR(res);
+        next(new BadRequestError("The id string is in an invalid format"));
       } else if (err.name === "DocumentNotFoundError") {
-        ERROR_CODES.NOT_FOUND(res);
+        next(new NotFoundError("Document not found"));
       } else {
-        ERROR_CODES.INTERNAL_SERVER_ERROR(res);
+        next(err);
       }
     });
 };
 
-module.exports.dislikeItem = (req, res) => {
+module.exports.dislikeItem = (req, res, next) => {
   ClothingItem.findByIdAndUpdate(
     req.params.itemId,
     { $pull: { likes: req.user._id } },
@@ -76,13 +83,12 @@ module.exports.dislikeItem = (req, res) => {
     .orFail()
     .then((item) => res.send({ data: item }))
     .catch((err) => {
-      console.error("Error liking clothing item:", err.name);
       if (err.name === "CastError") {
-        ERROR_CODES.VALIDATION_ERROR(res);
+        next(new BadRequestError("The id string is in an invalid format"));
       } else if (err.name === "DocumentNotFoundError") {
-        ERROR_CODES.NOT_FOUND(res);
+        next(new NotFoundError("Document not found"));
       } else {
-        ERROR_CODES.INTERNAL_SERVER_ERROR(res);
+        next(err);
       }
     });
 };

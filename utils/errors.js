@@ -1,38 +1,42 @@
-const ERROR_CODES = {
-  VALIDATION_ERROR: (res) => {
-    res.status(400).send({
-      message: `Invalid data`,
-    });
-  },
+class BadRequestError extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 400;
+  }
+}
 
-  AUTHORIZATION_ERROR: (res) => {
-    res.status(401).send({
-      message: `Authorization required`,
-    });
-  },
+class UnauthorizedError extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 401;
+  }
+}
 
-  PERMISSION_ERROR: (res) => {
-    res.status(403).send({
-      message: `You do not have permission to access this resource`,
-    });
-  },
+class ForbiddenError extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 403;
+  }
+}
 
-  NOT_FOUND: (res) => {
-    res.status(404).send({
-      message: `Request resource not found`,
-    });
-  },
+class NotFoundError extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 404;
+  }
+}
 
-  CONFLICT_ERROR: (res) => {
-    res.status(409).send({
-      message: `User already exists`,
-    });
-  },
+class ConflictError extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 409;
+  }
+}
 
-  INTERNAL_SERVER_ERROR: (res) => {
-    res.status(500).send({
-      message: `An error has accurred on the server`,
-    });
-  },
+module.exports = {
+  BadRequestError,
+  UnauthorizedError,
+  ForbiddenError,
+  NotFoundError,
+  ConflictError,
 };
-module.exports = ERROR_CODES;

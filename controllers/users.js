@@ -2,9 +2,14 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const JWT_SECRET = require("../utils/config");
-const ERROR_CODES = require("../utils/errors");
+const {
+  BadRequestError,
+  UnauthorizedError,
+  NotFoundError,
+  ConflictError,
+} = require("../utils/errors");
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
   bcrypt
     .hash(password, 10)
@@ -14,22 +19,21 @@ module.exports.createUser = (req, res) => {
       res.status(201).send({ data: userSansPassword });
     })
     .catch((err) => {
-      console.error("Error creating user:", err.name);
-      if (err.name === "ValidationError") {
-        ERROR_CODES.VALIDATION_ERROR(res);
+      if (err.name === "CastError" || err.name === "ValidationError") {
+        next(new BadRequestError("Invalid input data"));
       } else if (err.name === "MongoServerError") {
-        ERROR_CODES.CONFLICT_ERROR(res);
+        next(new ConflictError("Could not create user"));
       } else {
-        ERROR_CODES.INTERNAL_SERVER_ERROR(res);
+        next(err);
       }
     });
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return ERROR_CODES.VALIDATION_ERROR(res);
+    next(new BadRequestError("Invalid email or password"));
   }
   return User.findUserByCredentials(email, password)
     .then((user) => {
@@ -39,33 +43,30 @@ module.exports.login = (req, res) => {
       res.send({ token });
     })
     .catch((err) => {
-      console.error("Error logging in:", err.name);
-      console.error("Error logging in:", err.message);
       if (err.message === "Incorrect email or password") {
-        ERROR_CODES.AUTHORIZATION_ERROR(res);
+        next(new UnauthorizedError("Invalid email or password"));
       } else {
-        ERROR_CODES.INTERNAL_SERVER_ERROR(res);
+        next(err);
       }
     });
 };
 
-module.exports.getCurrentUser = (req, res) => {
+module.exports.getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
     .orFail()
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      console.error("Error fetching user:", err.name);
       if (err.name === "CastError") {
-        ERROR_CODES.VALIDATION_ERROR(res);
+        next(new BadRequestError("The id string is in an invalid format"));
       } else if (err.name === "DocumentNotFoundError") {
-        ERROR_CODES.NOT_FOUND(res);
+        next(new NotFoundError("User was not found"));
       } else {
-        ERROR_CODES.INTERNAL_SERVER_ERROR(res);
+        next(err);
       }
     });
 };
 
-module.exports.patchCurrentUser = (req, res) => {
+module.exports.patchCurrentUser = (req, res, next) => {
   const { name, avatar } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
@@ -75,13 +76,12 @@ module.exports.patchCurrentUser = (req, res) => {
     .orFail()
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      console.error("Error fetching user:", err.name);
-      if (err.name === "ValidationError" || err.name === "CastError") {
-        ERROR_CODES.VALIDATION_ERROR(res);
+      if (err.name === "CastError" || err.name === "ValidationError") {
+        next(new BadRequestError("Invalid input data"));
       } else if (err.name === "DocumentNotFoundError") {
-        ERROR_CODES.NOT_FOUND(res);
+        next(new NotFoundError("User not found"));
       } else {
-        ERROR_CODES.INTERNAL_SERVER_ERROR(res);
+        next(err);
       }
     });
 };
