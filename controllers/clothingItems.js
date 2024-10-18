@@ -5,7 +5,7 @@ const {
   NotFoundError,
 } = require("../utils/errors");
 
-module.exports.getClothingItems = (req, res) => {
+module.exports.getClothingItems = (req, res, next) => {
   ClothingItem.find({})
     .then((item) => res.send({ data: item }))
     .catch((err) => {
