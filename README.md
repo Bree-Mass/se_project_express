@@ -18,6 +18,7 @@ This project is a back-end API built using Node.js, Express, and MongoDB. The AP
 - **Node.js**: A JavaScript runtime for server-side programming.
 - **Express.js**: A fast web framework for building APIs with Node.js.
 - **MongoDB**: A NoSQL database for flexible and scalable data storage.
+- **Google Cloud**: A web hosting platform for deploying pages.
 
 ### Other Tools & Techniques
 
@@ -32,3 +33,7 @@ This project is a back-end API built using Node.js, Express, and MongoDB. The AP
 2. Install dependencies using `npm install`.
 3. Configure environment variables (e.g., MongoDB connection string).
 4. Start the server using `npm run start` for production or `npm run dev` for development with hot reloading.
+
+## Remote Access on Google Cloud
+
+You may visit https://whattowear.home.kg/ to see a live version of the page.
