@@ -9,11 +9,7 @@ module.exports.getClothingItems = (req, res, next) => {
   ClothingItem.find({})
     .then((item) => res.send({ data: item }))
     .catch((err) => {
-      if (err.name === "CastError") {
-        next(err);
-      } else {
-        next(err);
-      }
+      next(err);
     });
 };
 

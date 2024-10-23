@@ -6,6 +6,7 @@ require("dotenv").config();
 const { errors } = require("celebrate");
 const errorHandler = require("./middlewares/error-handler");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
+const { limiter } = require("./middlewares/rate-limiter");
 
 const app = express();
 const { PORT = 3001 } = process.env;
@@ -20,6 +21,7 @@ app.get("/crash-test", () => {
 app.use(express.json());
 app.use(cors());
 app.use(helmet());
+app.use(limiter);
 app.use(requestLogger);
 app.use(routes);
 app.use(errorLogger);
